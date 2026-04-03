@@ -1,5 +1,11 @@
 #pragma once
 #include <iostream>
+#include <tuple>
+
+struct SnakeSegment {
+    SnakeSegment(short x, short y);
+    std::tuple<short, short> position;
+};
 
 class Snake {
     private:

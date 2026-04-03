@@ -1,4 +1,5 @@
 #include "Snake.hpp"
+SnakeSegment::SnakeSegment(short x, short y) : position{x, y}{}
 
 Snake::Snake() : m_apples_eaten{0}, m_snake_segments{2} {}
 Snake::Snake(const int snake_segments) : m_apples_eaten{0}, m_snake_segments{snake_segments} {
