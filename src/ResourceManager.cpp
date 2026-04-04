@@ -2,6 +2,7 @@
 #include <iostream>
 
 ResourceManager::ResourceManager() : textures() {}
+
 sf::Texture& ResourceManager::getTexture(std::string path) {
     auto pairFound = textures.find(path);
     if(pairFound != textures.end()){

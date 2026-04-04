@@ -68,6 +68,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     sfml-graphics
     sfml-window
     sfml-system
+    sfml-audio
 )
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 glu32 winmm gdi32)
