@@ -9,8 +9,8 @@ class Map : public sf::Drawable{
     private:
     std::unique_ptr<Snake> m_snake;
     std::shared_ptr<ResourceManager> m_resources;
-    const short m_size_x = 20;
-    const short m_size_y = 20;
+    const short m_size_x = 22;
+    const short m_size_y = 22;
     sf::Vector2f m_tile_size;
     sf::Vector2f m_offset;
     std::pair<short, short> m_last_apple_pos = {-1, -1};

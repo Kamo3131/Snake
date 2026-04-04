@@ -1,20 +1,27 @@
 #include "Map.hpp"
 short generateNumber(short max) {
-    return rand()%100+1;
+    return rand()%max+1;
 }
 Map::Map(std::unique_ptr<Snake> snake, std::shared_ptr<ResourceManager> resources) 
 : m_snake{std::move(snake)}, m_resources{resources}{}
 
 void Map::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+    unsigned int size_y = target.getSize().y;
     sf::RectangleShape ground_tile(m_tile_size);
     ground_tile.setFillColor(sf::Color(50, 50, 50));
+    sf::RectangleShape wall_tile(m_tile_size);
+    wall_tile.setFillColor(sf::Color(150, 75, 0));
     for(int y = 0; y < m_size_y; ++y){
         for(int x = 0; x < m_size_x; ++x) {
-            ground_tile.setPosition(sf::Vector2f(x * m_tile_size.x + m_offset.x, y * m_tile_size.y + m_offset.y));
-            target.draw(ground_tile);
+            if(0 == x || 0 == y || (m_size_x - 1) == x || (m_size_y - 1) == y) {
+                wall_tile.setPosition(sf::Vector2f(x * m_tile_size.x + m_offset.x, y * m_tile_size.y + m_offset.y));
+                target.draw(wall_tile);
+            } else {
+                ground_tile.setPosition(sf::Vector2f(x * m_tile_size.x + m_offset.x, y * m_tile_size.y + m_offset.y));
+                target.draw(ground_tile);
+            }
         }
     }
-
 
     sf::RectangleShape apple_tile(m_tile_size);
     apple_tile.setFillColor(sf::Color::Red);
@@ -57,16 +64,17 @@ void Map::generateNewApple() {
     std::pair<short, short> lastPos = getLastApplePos();
     short new_pos_x = 0, new_pos_y = 0;
     do {
-        new_pos_x = generateNumber(20);
-        new_pos_y = generateNumber(20);
+        new_pos_x = generateNumber(m_size_x-2);
+        new_pos_y = generateNumber(m_size_y-2);
     }
     while(new_pos_x == lastPos.first && new_pos_y == lastPos.second);    
     setLastApplePos(std::make_pair(new_pos_x, new_pos_y));
+    std::cout << getLastApplePos().first << " " << getLastApplePos().second << std::endl;
 }
 
 void Map::setDrawParameters(sf::Vector2u draw_area_size) {
     float map_display_size = std::min(static_cast<float>(draw_area_size.x), static_cast<float>(draw_area_size.y));
-    float t_tile_size = map_display_size / m_size_x;
+    float t_tile_size = map_display_size / (m_size_x);
     m_tile_size = sf::Vector2f{t_tile_size, t_tile_size};
     m_offset.x = (draw_area_size.x - map_display_size) / 2.0f;
     m_offset.y = (draw_area_size.y - map_display_size) / 2.0f;
