@@ -10,7 +10,7 @@ void Map::draw(sf::RenderTarget & target, sf::RenderStates states) const {
     ground_tile.setFillColor(sf::Color(50, 50, 50));
     for(int y = 0; y < m_size_y; ++y){
         for(int x = 0; x < m_size_x; ++x) {
-            ground_tile.setPosition(sf::Vector2f(x*m_tile_size.x, y*m_tile_size.y));
+            ground_tile.setPosition(sf::Vector2f(x * m_tile_size.x + m_offset.x, y * m_tile_size.y + m_offset.y));
             target.draw(ground_tile);
         }
     }
@@ -20,8 +20,8 @@ void Map::draw(sf::RenderTarget & target, sf::RenderStates states) const {
     apple_tile.setFillColor(sf::Color::Red);
     if(m_last_apple_pos.first != -1) {
         apple_tile.setPosition(
-            sf::Vector2f(m_last_apple_pos.first*m_tile_size.x, 
-                m_last_apple_pos.second*m_tile_size.y));
+            sf::Vector2f(m_last_apple_pos.first * m_tile_size.x  + m_offset.x, 
+                m_last_apple_pos.second * m_tile_size.y  + m_offset.y));
         target.draw(apple_tile);
     }
 
@@ -32,7 +32,7 @@ void Map::draw(sf::RenderTarget & target, sf::RenderStates states) const {
         std::pair<std::pair<short, short>, Direction> segmentData 
         = m_snake->getSegment(i);
         auto pos = segmentData.first;
-        snake_tile.setPosition(sf::Vector2f(pos.first * m_tile_size.x, pos.second * m_tile_size.y));
+        snake_tile.setPosition(sf::Vector2f(pos.first * m_tile_size.x + m_offset.x, pos.second * m_tile_size.y + m_offset.y));
         if (0 == i) {
             snake_tile.setFillColor(sf::Color(0, 200, 0));
         } else {
@@ -65,6 +65,9 @@ void Map::generateNewApple() {
 }
 
 void Map::setDrawParameters(sf::Vector2u draw_area_size) {
-    m_tile_size.x = static_cast<float>(draw_area_size.x) / m_size_x;
-    m_tile_size.y = static_cast<float>(draw_area_size.y) / m_size_y; 
+    float map_display_size = std::min(static_cast<float>(draw_area_size.x), static_cast<float>(draw_area_size.y));
+    float t_tile_size = map_display_size / m_size_x;
+    m_tile_size = sf::Vector2f{t_tile_size, t_tile_size};
+    m_offset.x = (draw_area_size.x - map_display_size) / 2.0f;
+    m_offset.y = (draw_area_size.y - map_display_size) / 2.0f;
 }

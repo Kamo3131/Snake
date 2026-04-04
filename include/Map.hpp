@@ -12,6 +12,7 @@ class Map : public sf::Drawable{
     const short m_size_x = 20;
     const short m_size_y = 20;
     sf::Vector2f m_tile_size;
+    sf::Vector2f m_offset;
     std::pair<short, short> m_last_apple_pos = {-1, -1};
     std::pair<short, short> getLastApplePos() const;
     void setLastApplePos(std::pair<short, short>);

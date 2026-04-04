@@ -1,57 +1,56 @@
+#include <memory>
 #include <imgui.h>
 #include <imgui-SFML.h>
-
+#include "ResourceManager.hpp"
+#include "Map.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
 int main() {
-    // 1. Create the SFML window
-    sf::RenderWindow window(sf::VideoMode({800, 600}), "ImGui + SFML Test");
+    sf::RenderWindow window(sf::VideoMode({800, 600}), "Snake", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
     window.setFramerateLimit(60);
-
-    // 2. Initialize ImGui-SFML
     if (!ImGui::SFML::Init(window)) {
         return -1;
     }
-
+    std::shared_ptr<ResourceManager> resourceManager 
+    = std::make_shared<ResourceManager>();
+    // resourceManager.getTexture("../../assets/Floor.png");
+    // resourceManager.getTexture("../../assets/Wall.png");
+    // resourceManager.getTexture("../../assets/Apple.png");
+    // resourceManager.getTexture("../../assets/Snake.png");
     sf::Clock deltaClock;
+    Map map(std::make_unique<Snake>(5, 5), resourceManager);
+    // bool game_active = false;
+    map.generateNewApple();
+    map.setDrawParameters(window.getSize());
     while (window.isOpen()) {
-        // 3. Handle Events
+        
         while (const std::optional event = window.pollEvent()) {
             ImGui::SFML::ProcessEvent(window, *event);
 
-            if (event->is<sf::Event::Closed>()) {
+            if (event->is<sf::Event::Closed>())
+            {
                 window.close();
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+                window.close();
+            }
+            if (const auto resized = event->getIf<sf::Event::Resized>())
+            {
+                window.setView(sf::View(sf::FloatRect({ 0, 0 }, static_cast<sf::Vector2f>(resized->size))));
+                map.setDrawParameters(window.getSize());
             }
         }
 
-        // 4. Update ImGui
         ImGui::SFML::Update(window, deltaClock.restart());
-
-        // 5. Build your UI
-        ImGui::Begin("Hello, Game Dev!");
-        ImGui::Text("If you see this, ImGui is working!");
-        static float color[3] = { 0.1f, 0.1f, 0.1f };
-        ImGui::ColorEdit3("Background Color", color);
-        
-        if (ImGui::Button("Reset Color")) {
-            color[0] = 0.1f; color[1] = 0.1f; color[2] = 0.1f;
-        }
-        ImGui::End();
-
-        // 6. Render
-        window.clear(sf::Color(
-            static_cast<std::uint8_t>(color[0] * 255),
-            static_cast<std::uint8_t>(color[1] * 255),
-            static_cast<std::uint8_t>(color[2] * 255)
-        ));
-        
+        window.clear(sf::Color::Black);
+        window.draw(map);
         ImGui::SFML::Render(window);
+
         window.display();
     }
-
-    // 7. Shutdown
+    deltaClock.restart();
     ImGui::SFML::Shutdown();
 
     return 0;
