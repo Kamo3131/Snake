@@ -1,12 +1,11 @@
 #include "Snake.hpp"
 SnakeSegment::SnakeSegment(short x, short y, Direction direction) : m_position{x, y}, m_direction{direction}{}
-
-Snake::Snake() : m_apples_eaten{0}, m_segments_number{2} {
-    m_snake_segments.emplace_back(50, 50, Direction::UP);
+Snake::Snake(short x, short y) : m_apples_eaten{0}, m_segments_number{2} {
+    m_snake_segments.emplace_back(x, y, Direction::UP);
     m_snake_segments.push_back(m_snake_segments.back());
 }
-Snake::Snake(const int segments_number) : m_apples_eaten{0}, m_segments_number{segments_number} {
-    m_snake_segments.emplace_back(50, 50, Direction::UP);
+Snake::Snake(short x, short y, const int segments_number) : m_apples_eaten{0}, m_segments_number{segments_number} {
+    m_snake_segments.emplace_back(x, y, Direction::UP);
     grow(segments_number-1);
 }
 int Snake::getApplesEaten() const {
@@ -38,7 +37,7 @@ std::pair<std::pair<short, short>, Direction> Snake::getSegment(int index) const
 }
 
 void Snake::movement(std::pair<short, short> head_position, Direction head_direction) {
-    m_snake_segments.emplace_front(head_position, head_direction);
+    m_snake_segments.emplace_front(head_position.first, head_position.second, head_direction);
     if(m_snake_segments.size() > m_segments_number) {
         m_snake_segments.pop_back();
     }

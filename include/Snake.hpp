@@ -9,6 +9,12 @@ enum Direction {
 
 struct SnakeSegment {
     SnakeSegment(short x, short y, Direction direction);
+    // ~SnakeSegment();
+    // SnakeSegment(const SnakeSegment & snake);
+    // SnakeSegment(SnakeSegment && snake);
+    // SnakeSegment& operator=(const SnakeSegment & snake);
+    // SnakeSegment& operator=(SnakeSegment && snake);
+    
     std::pair<short, short> m_position;
     Direction m_direction = UP;
 };
@@ -19,8 +25,8 @@ class Snake {
         int m_segments_number = 2;
         std::deque<SnakeSegment> m_snake_segments;
     public:
-        Snake();
-        Snake(const int segments_number);
+        Snake(short x, short y);
+        Snake(short x, short y, const int segments_number);
         /**
          * @brief getter for apples eaten.
          * @returns number of apples eaten.
