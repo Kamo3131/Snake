@@ -42,3 +42,65 @@ void Snake::movement(std::pair<short, short> head_position, Direction head_direc
         m_snake_segments.pop_back();
     }
 }
+
+void Snake::moveRight() {
+    Direction head_direction = m_snake_segments[0].m_direction;
+    short head_position_x = m_snake_segments[0].m_position.first;
+    short head_position_y = m_snake_segments[0].m_position.second;
+    switch (head_direction)
+    {
+    case Direction::UP:
+        movement(std::make_pair(head_position_x+1, head_position_y), Direction::RIGHT);
+        break;
+    case Direction::RIGHT:
+        movement(std::make_pair(head_position_x, head_position_y+1), Direction::DOWN);
+        break;
+    case Direction::DOWN:
+        movement(std::make_pair(head_position_x-1, head_position_y), Direction::LEFT);
+        break;
+    case Direction::LEFT:
+        movement(std::make_pair(head_position_x, head_position_y-1), Direction::UP);
+        break;
+    }
+}
+void Snake::moveLeft() {
+    Direction head_direction = m_snake_segments[0].m_direction;
+    short head_position_x = m_snake_segments[0].m_position.first;
+    short head_position_y = m_snake_segments[0].m_position.second;
+    switch (head_direction)
+    {
+    case Direction::UP:
+        movement(std::make_pair(head_position_x-1, head_position_y), Direction::LEFT);
+        break;
+    case Direction::RIGHT:
+        movement(std::make_pair(head_position_x, head_position_y-1), Direction::UP);
+        break;
+    case Direction::DOWN:
+        movement(std::make_pair(head_position_x+1, head_position_y), Direction::RIGHT);
+        break;
+    case Direction::LEFT:
+        movement(std::make_pair(head_position_x, head_position_y+1), Direction::DOWN);
+        break;
+    }
+}
+
+void Snake::moveStraight() {
+    Direction head_direction = m_snake_segments[0].m_direction;
+    short head_position_x = m_snake_segments[0].m_position.first;
+    short head_position_y = m_snake_segments[0].m_position.second;
+    switch (head_direction)
+    {
+    case Direction::UP:
+        movement(std::make_pair(head_position_x, head_position_y-1), Direction::UP);
+        break;
+    case Direction::RIGHT:
+        movement(std::make_pair(head_position_x+1, head_position_y), Direction::RIGHT);
+        break;
+    case Direction::DOWN:
+        movement(std::make_pair(head_position_x, head_position_y+1), Direction::DOWN);
+        break;
+    case Direction::LEFT:
+        movement(std::make_pair(head_position_x-1, head_position_y), Direction::LEFT);
+        break;
+    }
+}

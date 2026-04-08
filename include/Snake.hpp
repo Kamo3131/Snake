@@ -24,6 +24,12 @@ class Snake {
         int m_apples_eaten = 0;
         int m_segments_number = 2;
         std::deque<SnakeSegment> m_snake_segments;
+        void movement(std::pair<short, short> head_position, Direction head_direction);
+        /**
+         * @brief makes snake grow.
+         * @param new_segments dictate how many segments will be added to snake.
+         */
+        void grow(const int new_segments);
     public:
         Snake(short x, short y);
         Snake(short x, short y, const int segments_number);
@@ -48,14 +54,11 @@ class Snake {
          */
         void setSegmentsNumber(const int segmentsNumber);
         /**
-         * @brief makes snake grow.
-         * @param new_segments dictate how many segments will be added to snake.
-         */
-        void grow(const int new_segments);
-        /**
          * @brief increases apples eaten.
          */
         void eatApple();
         std::pair<std::pair<short, short>, Direction> getSegment(int index) const;
-        void movement(std::pair<short, short> head_position, Direction head_direction);
+        void moveLeft();
+        void moveRight();
+        void moveStraight();
 };
