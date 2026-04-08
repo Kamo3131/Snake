@@ -79,3 +79,16 @@ void Map::setDrawParameters(sf::Vector2u draw_area_size) {
     m_offset.x = (draw_area_size.x - map_display_size) / 2.0f;
     m_offset.y = (draw_area_size.y - map_display_size) / 2.0f;
 }
+
+void Map::moveSnakeRight() {
+    m_snake->moveRight();
+}
+void Map::moveSnakeLeft() {
+    m_snake->moveLeft();
+}
+void Map::moveSnakeStraight() {
+    m_snake->moveStraight();
+}
+void Map::makeSnakeEat() {
+    m_snake->eatApple();
+}

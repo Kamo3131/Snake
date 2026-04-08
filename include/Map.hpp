@@ -23,4 +23,8 @@ class Map : public sf::Drawable{
     short getSizeX() const;
     short getSizeY() const;
     void generateNewApple();
+    void moveSnakeRight();
+    void moveSnakeLeft();
+    void moveSnakeStraight();
+    void makeSnakeEat();
 };
