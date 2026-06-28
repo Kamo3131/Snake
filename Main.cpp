@@ -36,6 +36,12 @@ int main() {
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
                 window.close();
             }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+                map.moveSnakeLeft();
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+                map.moveSnakeRight();
+            }
             if (const auto resized = event->getIf<sf::Event::Resized>())
             {
                 window.setView(sf::View(sf::FloatRect({ 0, 0 }, static_cast<sf::Vector2f>(resized->size))));
@@ -44,6 +50,7 @@ int main() {
         }
 
         ImGui::SFML::Update(window, deltaClock.restart());
+        map.moveSnakeStraight();
         window.clear(sf::Color::Black);
         window.draw(map);
         ImGui::SFML::Render(window);
