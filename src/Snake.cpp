@@ -14,6 +14,9 @@ int Snake::getApplesEaten() const {
 int Snake::getSegmentsNumber() const {
     return m_segments_number;
 }
+float Snake::getSpeed() const {
+    return m_snake_speed;
+}
 void Snake::setApplesEaten(const int apples_eaten) {
     m_apples_eaten = apples_eaten;
 }

@@ -23,6 +23,8 @@ class Snake {
     private:
         int m_apples_eaten = 0;
         int m_segments_number = 2;
+        // half tile per second
+        float m_snake_speed = 0.01f;
         std::deque<SnakeSegment> m_snake_segments;
         void movement(std::pair<short, short> head_position, Direction head_direction);
         /**
@@ -43,6 +45,11 @@ class Snake {
          * @returns number of snake segments.
          */
         int getSegmentsNumber() const;
+        /**
+         * @brief getter for snake's speed.
+         * @returns snake's speed.
+         */
+        float getSpeed() const;
         /**
          * @brief setter for apples eaten.
          * @param apples_eaten new value for m_apples_eaten.

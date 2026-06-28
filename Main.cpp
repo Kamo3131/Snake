@@ -10,24 +10,22 @@
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Snake", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
     window.setFramerateLimit(60);
-    if (!ImGui::SFML::Init(window)) {
-        return -1;
-    }
     std::shared_ptr<ResourceManager> resourceManager 
     = std::make_shared<ResourceManager>();
-    // resourceManager.getTexture("../../assets/Floor.png");
-    // resourceManager.getTexture("../../assets/Wall.png");
-    // resourceManager.getTexture("../../assets/Apple.png");
-    // resourceManager.getTexture("../../assets/Snake.png");
     sf::Clock deltaClock;
     Map map(std::make_unique<Snake>(5, 5), resourceManager);
-    // bool game_active = false;
     map.generateNewApple();
     map.setDrawParameters(window.getSize());
+    map.makeSnakeEat();
+    map.makeSnakeEat();
+    map.makeSnakeEat();
+    map.makeSnakeEat();
     while (window.isOpen()) {
-        
+        sf::Time deltaTimeTimer = deltaClock.restart();
+        const float deltaTime = deltaTimeTimer.asMilliseconds();
+        const float framerate = 1000.0f / deltaTime;
+        std::cout << framerate << std::endl;
         while (const std::optional event = window.pollEvent()) {
-            ImGui::SFML::ProcessEvent(window, *event);
 
             if (event->is<sf::Event::Closed>())
             {
@@ -49,16 +47,13 @@ int main() {
             }
         }
 
-        ImGui::SFML::Update(window, deltaClock.restart());
         map.moveSnakeStraight();
+
         window.clear(sf::Color::Black);
-        window.draw(map);
-        ImGui::SFML::Render(window);
+        map.update(deltaTime, window);
 
         window.display();
     }
-    deltaClock.restart();
-    ImGui::SFML::Shutdown();
 
     return 0;
 }
