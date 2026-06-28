@@ -16,6 +16,7 @@ class Map : public sf::Drawable{
     std::pair<short, short> m_last_apple_pos = {-1, -1};
     std::pair<short, short> getLastApplePos() const;
     void setLastApplePos(std::pair<short, short>);
+    
     public:
     Map(std::unique_ptr<Snake> snake, std::shared_ptr<ResourceManager> resources);
     void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
