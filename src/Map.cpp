@@ -5,7 +5,7 @@ short generateNumber(short max) {
 Map::Map(std::unique_ptr<Snake> snake, std::shared_ptr<ResourceManager> resources) 
 : m_snake{std::move(snake)}, m_resources{resources}{}
 
-void Map::update(const float delta, sf::RenderTarget & target) const {
+void Map::update(const float delta_offset, sf::RenderTarget & target) const {
     unsigned int size_y = target.getSize().y;
     sf::RectangleShape ground_tile(m_tile_size);
     ground_tile.setFillColor(sf::Color(50, 50, 50));
@@ -35,6 +35,9 @@ void Map::update(const float delta, sf::RenderTarget & target) const {
     sf::RectangleShape snake_tile(m_tile_size);
     snake_tile.setFillColor(sf::Color::Green);
     short segments_number = m_snake->getSegmentsNumber();
+    const float speed = m_snake->getSpeed();
+    float progress = delta_offset / speed;
+    if(progress > 1.0f) progress = 1.0f;
     for(int i = 0; i < segments_number; ++i){
         std::pair<std::pair<short, short>, Direction> segmentData 
         = m_snake->getSegment(i);
@@ -42,11 +45,23 @@ void Map::update(const float delta, sf::RenderTarget & target) const {
         float x_pos = segmentData.first.first * m_tile_size.x + m_offset.x;
         float y_pos = segmentData.first.second * m_tile_size.y + m_offset.y;
         
-        // if(UP == segmentData.second || DOWN == segmentData.second) {
-        //     y_pos *= m_snake->getSpeed() * delta;
-        // } else {
-        //     x_pos *= m_snake->getSpeed() * delta;
+
+        // I need to think how to make other segments turn quicker when head turns.
+        // switch (segmentData.second) {
+        //     case UP:
+        //         y_pos -= m_tile_size.y * progress;
+        //         break;
+        //     case DOWN:
+        //         y_pos += m_tile_size.y * progress;
+        //         break;
+        //     case RIGHT:
+        //         x_pos += m_tile_size.x * progress;
+        //         break;
+        //     case LEFT:
+        //         x_pos -= m_tile_size.x * progress;
+        //         break;
         // }
+
         snake_tile.setPosition(sf::Vector2f(x_pos, y_pos));
         if (0 == i) {
             snake_tile.setFillColor(sf::Color(0, 200, 0));
@@ -96,6 +111,10 @@ void Map::moveSnakeLeft() {
 }
 void Map::moveSnakeStraight() {
     m_snake->moveStraight();
+}
+
+float Map::getSnakeSpeed() const {
+    return m_snake->getSpeed();
 }
 bool Map::nextMoveOutMap() const {
     auto pos = m_snake->getHeadPosition();

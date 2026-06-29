@@ -25,6 +25,8 @@ class Map {
     short getSizeX() const;
     short getSizeY() const;
     void generateNewApple();
+
+    float getSnakeSpeed() const;
     void moveSnakeRight();
     void moveSnakeLeft();
     void moveSnakeStraight();

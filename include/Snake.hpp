@@ -23,8 +23,8 @@ class Snake {
     private:
         int m_apples_eaten = 0;
         int m_segments_number = 4;
-        // half tile per second
-        float m_snake_speed = 0.01f;
+        // time to tile jump (value in miliseconds)
+        float m_snake_speed = 0.1f;
         std::deque<SnakeSegment> m_snake_segments;
         void movement(std::pair<short, short> head_position, Direction head_direction);
         /**
