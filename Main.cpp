@@ -11,7 +11,7 @@
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Snake", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
-    window.setFramerateLimit(100);
+    window.setFramerateLimit(300);
     std::shared_ptr<ResourceManager> resourceManager 
     = std::make_shared<ResourceManager>();
     
@@ -31,20 +31,16 @@ int main() {
     map.makeSnakeEat();
     map.makeSnakeEat();
     Direction currentDirection = UP;
-
     // ==================== Clock init ========================
     sf::Clock deltaClock;
     float timer = 0.f;
-    // Half a second for tile jump (value in miliseconds)
-    const float tileJumpTimeInterval = 100.0f;
-
-
+    // 1/10 of a second for tile jump (value in miliseconds)
     while (window.isOpen()) {
         
         sf::Time deltaTimeTimer = deltaClock.restart();
-        const float deltaTime = deltaTimeTimer.asMilliseconds();
+        const float deltaTime = deltaTimeTimer.asSeconds();
         timer += deltaTime;
-        const float framerate = 1000.0f / deltaTime;
+        const float framerate = 1.0f / deltaTime;
         // std::cout << framerate << std::endl;
         while (const std::optional event = window.pollEvent()) {
 
@@ -67,9 +63,9 @@ int main() {
                 map.setDrawParameters(window.getSize());
             }
         }
-
-        if(timer >= tileJumpTimeInterval) {    
-            timer -= tileJumpTimeInterval;
+        const float speed = map.getSnakeSpeed();
+        if(timer >= speed) {    
+            timer -= speed;
 
             if(map.nextMoveOutMap()) {
                 map.moveSnakeRight();
@@ -96,7 +92,7 @@ int main() {
         text.setString(ss.str());
 
         window.clear(sf::Color::Black);
-        map.update(deltaTime, window);
+        map.update(timer, window);
         window.draw(text);
         window.display();
     }
