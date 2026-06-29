@@ -6,13 +6,23 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
+#include <sstream>
+#include <iomanip>
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Snake", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(100);
     std::shared_ptr<ResourceManager> resourceManager 
     = std::make_shared<ResourceManager>();
-    sf::Clock deltaClock;
+    
+    
+    // ===================== Text init =========================
+    sf::Text text(resourceManager->getFont("assets/SaH1Outline.ttf"));
+    text.setFillColor(sf::Color::Cyan);
+    text.setStyle(sf::Text::Bold);
+    text.setCharacterSize(20);
+
+    // ===================== Map init ==========================
     Map map(std::make_unique<Snake>(5, 5), resourceManager);
     map.generateNewApple();
     map.setDrawParameters(window.getSize());
@@ -20,11 +30,22 @@ int main() {
     map.makeSnakeEat();
     map.makeSnakeEat();
     map.makeSnakeEat();
+    Direction currentDirection = UP;
+
+    // ==================== Clock init ========================
+    sf::Clock deltaClock;
+    float timer = 0.f;
+    // Half a second for tile jump (value in miliseconds)
+    const float tileJumpTimeInterval = 100.0f;
+
+
     while (window.isOpen()) {
+        
         sf::Time deltaTimeTimer = deltaClock.restart();
         const float deltaTime = deltaTimeTimer.asMilliseconds();
+        timer += deltaTime;
         const float framerate = 1000.0f / deltaTime;
-        std::cout << framerate << std::endl;
+        // std::cout << framerate << std::endl;
         while (const std::optional event = window.pollEvent()) {
 
             if (event->is<sf::Event::Closed>())
@@ -35,10 +56,10 @@ int main() {
                 window.close();
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
-                map.moveSnakeLeft();
+                currentDirection = LEFT;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
-                map.moveSnakeRight();
+                currentDirection = RIGHT;
             }
             if (const auto resized = event->getIf<sf::Event::Resized>())
             {
@@ -47,11 +68,36 @@ int main() {
             }
         }
 
-        map.moveSnakeStraight();
+        if(timer >= tileJumpTimeInterval) {    
+            timer -= tileJumpTimeInterval;
+
+            if(map.nextMoveOutMap()) {
+                map.moveSnakeRight();
+            } else {
+                switch(currentDirection) {
+                    case UP:
+                        map.moveSnakeStraight();
+                        break;
+                    case LEFT:
+                        map.moveSnakeLeft();
+                        break;
+                    case RIGHT:
+                        map.moveSnakeRight();
+                        break;
+                    case DOWN:
+                        break;
+                }
+                currentDirection = UP;
+            }
+        }
+        std::ostringstream ss;
+        ss << std::fixed << std::setprecision(0) << framerate;
+
+        text.setString(ss.str());
 
         window.clear(sf::Color::Black);
         map.update(deltaTime, window);
-
+        window.draw(text);
         window.display();
     }
 

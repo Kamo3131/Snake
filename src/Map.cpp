@@ -42,11 +42,11 @@ void Map::update(const float delta, sf::RenderTarget & target) const {
         float x_pos = segmentData.first.first * m_tile_size.x + m_offset.x;
         float y_pos = segmentData.first.second * m_tile_size.y + m_offset.y;
         
-        if(UP == segmentData.second || DOWN == segmentData.second) {
-            y_pos *= m_snake->getSpeed() * delta;
-        } else {
-            x_pos *= m_snake->getSpeed() * delta;
-        }
+        // if(UP == segmentData.second || DOWN == segmentData.second) {
+        //     y_pos *= m_snake->getSpeed() * delta;
+        // } else {
+        //     x_pos *= m_snake->getSpeed() * delta;
+        // }
         snake_tile.setPosition(sf::Vector2f(x_pos, y_pos));
         if (0 == i) {
             snake_tile.setFillColor(sf::Color(0, 200, 0));
@@ -96,6 +96,12 @@ void Map::moveSnakeLeft() {
 }
 void Map::moveSnakeStraight() {
     m_snake->moveStraight();
+}
+bool Map::nextMoveOutMap() const {
+    auto pos = m_snake->getHeadPosition();
+    if(pos.first >= (m_size_x - 2) || pos.first <= 1) return true;
+    if(pos.second >= (m_size_y - 2) || pos.second <= 1) return true;
+    return false;
 }
 void Map::makeSnakeEat() {
     m_snake->eatApple();

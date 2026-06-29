@@ -9,6 +9,7 @@ class Map {
     private:
     std::unique_ptr<Snake> m_snake;
     std::shared_ptr<ResourceManager> m_resources;
+    // bool moving = false;
     const short m_size_x = 22;
     const short m_size_y = 22;
     sf::Vector2f m_tile_size;
@@ -28,4 +29,7 @@ class Map {
     void moveSnakeLeft();
     void moveSnakeStraight();
     void makeSnakeEat();
+    // void changeMoving();
+    // bool moving();
+    bool nextMoveOutMap() const;
 };
