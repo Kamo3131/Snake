@@ -14,6 +14,12 @@ int Snake::getApplesEaten() const {
 int Snake::getSegmentsNumber() const {
     return m_segments_number;
 }
+std::pair<short, short> Snake::getHeadPosition() const {
+    return m_snake_segments.at(0).m_position;
+}
+float Snake::getSpeed() const {
+    return m_snake_speed;
+}
 void Snake::setApplesEaten(const int apples_eaten) {
     m_apples_eaten = apples_eaten;
 }

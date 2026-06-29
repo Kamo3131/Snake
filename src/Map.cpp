@@ -5,7 +5,7 @@ short generateNumber(short max) {
 Map::Map(std::unique_ptr<Snake> snake, std::shared_ptr<ResourceManager> resources) 
 : m_snake{std::move(snake)}, m_resources{resources}{}
 
-void Map::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+void Map::update(const float delta, sf::RenderTarget & target) const {
     unsigned int size_y = target.getSize().y;
     sf::RectangleShape ground_tile(m_tile_size);
     ground_tile.setFillColor(sf::Color(50, 50, 50));
@@ -38,8 +38,16 @@ void Map::draw(sf::RenderTarget & target, sf::RenderStates states) const {
     for(int i = 0; i < segments_number; ++i){
         std::pair<std::pair<short, short>, Direction> segmentData 
         = m_snake->getSegment(i);
-        auto pos = segmentData.first;
-        snake_tile.setPosition(sf::Vector2f(pos.first * m_tile_size.x + m_offset.x, pos.second * m_tile_size.y + m_offset.y));
+
+        float x_pos = segmentData.first.first * m_tile_size.x + m_offset.x;
+        float y_pos = segmentData.first.second * m_tile_size.y + m_offset.y;
+        
+        // if(UP == segmentData.second || DOWN == segmentData.second) {
+        //     y_pos *= m_snake->getSpeed() * delta;
+        // } else {
+        //     x_pos *= m_snake->getSpeed() * delta;
+        // }
+        snake_tile.setPosition(sf::Vector2f(x_pos, y_pos));
         if (0 == i) {
             snake_tile.setFillColor(sf::Color(0, 200, 0));
         } else {
@@ -88,6 +96,12 @@ void Map::moveSnakeLeft() {
 }
 void Map::moveSnakeStraight() {
     m_snake->moveStraight();
+}
+bool Map::nextMoveOutMap() const {
+    auto pos = m_snake->getHeadPosition();
+    if(pos.first >= (m_size_x - 2) || pos.first <= 1) return true;
+    if(pos.second >= (m_size_y - 2) || pos.second <= 1) return true;
+    return false;
 }
 void Map::makeSnakeEat() {
     m_snake->eatApple();
